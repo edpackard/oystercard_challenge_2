@@ -2,6 +2,8 @@ require "oystercard"
 
 describe Oystercard do 
 
+  let (:station) { double :station }
+
   subject(:oystercard) { described_class.new }
   
   it { is_expected.to respond_to(:top_up).with(1).argument } 
@@ -19,12 +21,10 @@ describe Oystercard do
     end
   end
 
-  
-
   describe "#in_journey?" do
     it "returns true if in_journey" do
       subject.top_up(Oystercard::MINIMUM_FARE)
-      subject.touch_in
+      subject.touch_in(:station)
       expect(subject.in_journey?).to be true
     end
     
@@ -37,18 +37,24 @@ describe Oystercard do
     it "changes in_journey? status to true" do
       subject.top_up(Oystercard::MINIMUM_FARE*2)
       subject.touch_out
-      expect { subject.touch_in }.to change { subject.in_journey? }.to(true)
+      expect { subject.touch_in(:station) }.to change { subject.in_journey? }.to(true)
     end
 
     it "raises an error if insufficient funds" do
-      expect { subject.touch_in }.to raise_error "Insufficient funds!"
+      expect { subject.touch_in(:station) }.to raise_error "Insufficient funds!"
+    end
+
+    it "remembers station after touch_in" do
+      subject.top_up(Oystercard::MINIMUM_FARE)
+      subject.touch_in(:station)
+      expect(subject.entry_station).to eq :station
     end
   end
 
   describe "#touch_out" do
     it "sets in_journey? status to false" do
       subject.top_up(Oystercard::MINIMUM_FARE)
-      subject.touch_in
+      subject.touch_in(:station)
       subject.touch_out
       expect(subject.in_journey?).to eq false
     end
@@ -57,8 +63,12 @@ describe Oystercard do
       subject.top_up(Oystercard::MINIMUM_FARE)
       expect { subject.touch_out }.to change{subject.balance}.by (-Oystercard::MINIMUM_FARE)
     end
+
+    it "resets entry station to nil after touch out" do
+      subject.top_up(Oystercard::MINIMUM_FARE)
+      subject.touch_in(:station)
+      expect { subject.touch_out }.to change{subject.entry_station}.to nil
+    end
   end
-
-
 
 end

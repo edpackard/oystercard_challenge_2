@@ -4,7 +4,7 @@ MINIMUM_FARE = 1
 STARTING_BALANCE = 0
 MAX_TOP_UP = 90
 
-attr_reader :balance, :in_use
+attr_reader :balance, :entry_station
 
   def initialize
     @balance = STARTING_BALANCE
@@ -17,19 +17,19 @@ attr_reader :balance, :in_use
     @balance += money
   end 
 
-  
   def in_journey?
-    @in_use
+    @entry_station != nil ? true : false
   end
 
-  def touch_in
+  def touch_in(station)
     raise "Insufficient funds!" if @balance < MINIMUM_FARE
-    @in_use = true
+    
+    @entry_station = station
   end
   
   def touch_out
     deduct(MINIMUM_FARE)
-    @in_use = false
+    @entry_station = nil
   end
 
   private
