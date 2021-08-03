@@ -9,9 +9,6 @@ describe Oystercard do
     it "initializes starting balance as a constant" do
       expect(subject.balance).to eq Oystercard::STARTING_BALANCE
     end
-    it "initializes @journeys as an Array" do
-      expect(subject.journeys).to be_a Array
-    end
     it "initializes @journeys as empty" do
       expect(subject.journeys).to be_empty
     end
@@ -46,10 +43,6 @@ describe Oystercard do
         expect(subject.in_journey?).to be true
       end
 
-      it "remembers station after touch_in" do
-        expect(subject.entry_station).to eq :station
-      end
-
       it "creates hash to store entry and exit stations" do
         expect(subject.journey).to be_a Hash
       end
@@ -74,15 +67,6 @@ describe Oystercard do
     it "sets in_journey? status as false" do
       subject.touch_out(:station)
       expect(subject.in_journey?).to eq false
-    end
-  
-    it "resets entry station to nil after touch out" do
-      expect { subject.touch_out(:station) }.to change { subject.entry_station }.to nil
-    end
-
-    it "remembers station after touch_out" do
-      subject.touch_out(:station)
-      expect(subject.exit_station).to eq :station
     end
 
     it "adds exit station to journey hash" do

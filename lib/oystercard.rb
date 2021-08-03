@@ -5,8 +5,6 @@ STARTING_BALANCE = 0
 MAX_TOP_UP = 90
 
 attr_reader :balance, 
-            :entry_station, 
-            :exit_station,
             :journey,
             :journeys
 
@@ -24,21 +22,19 @@ attr_reader :balance,
   end 
 
   def in_journey?
-    @entry_station != nil ? true : false
+    @journey.size == 1
+    #@entry_station != nil ? true : false
   end
 
   def touch_in(station)
     raise "Insufficient funds!" if insufficient_funds?
-    @entry_station = station
     @journey = Hash.new
-    @journey[:entry_station] = station
+    record_journey(:entry_station, station)
   end
   
   def touch_out(station)
     deduct(MINIMUM_FARE)
-    @entry_station = nil
-    @exit_station = station
-    @journey[:exit_station] = station
+    record_journey(:exit_station, station)
     @journeys << @journey
   end
 
@@ -46,6 +42,10 @@ attr_reader :balance,
 
   def deduct(money)
     @balance -= money
+  end
+
+  def record_journey(stage, station)
+    @journey[stage] = station
   end
 
   def exceed_top_up?(amount, balance)
