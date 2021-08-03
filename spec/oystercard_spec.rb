@@ -36,7 +36,7 @@ describe Oystercard do
   describe "#touch_in" do
     it "changes in_journey? status to true" do
       subject.top_up(Oystercard::MINIMUM_FARE*2)
-      subject.touch_out
+      subject.touch_out(:station)
       expect { subject.touch_in(:station) }.to change { subject.in_journey? }.to(true)
     end
 
@@ -55,20 +55,27 @@ describe Oystercard do
     it "sets in_journey? status to false" do
       subject.top_up(Oystercard::MINIMUM_FARE)
       subject.touch_in(:station)
-      subject.touch_out
+      subject.touch_out(:station)
       expect(subject.in_journey?).to eq false
     end
   
     it "deducts minimum fare" do
       subject.top_up(Oystercard::MINIMUM_FARE)
-      expect { subject.touch_out }.to change{subject.balance}.by (-Oystercard::MINIMUM_FARE)
+      expect { subject.touch_out(:station ) }.to change{subject.balance}.by (-Oystercard::MINIMUM_FARE)
     end
 
     it "resets entry station to nil after touch out" do
       subject.top_up(Oystercard::MINIMUM_FARE)
       subject.touch_in(:station)
-      expect { subject.touch_out }.to change{subject.entry_station}.to nil
+      expect { subject.touch_out(:station) }.to change{subject.entry_station}.to nil
     end
+    it "remembers station after touch_out" do
+      subject.top_up(Oystercard::MINIMUM_FARE)
+      subject.touch_out(:station)
+      expect(subject.exit_station).to eq :station
+    end
+
   end
+
 
 end

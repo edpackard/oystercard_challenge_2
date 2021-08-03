@@ -4,7 +4,7 @@ MINIMUM_FARE = 1
 STARTING_BALANCE = 0
 MAX_TOP_UP = 90
 
-attr_reader :balance, :entry_station
+attr_reader :balance, :entry_station, :exit_station
 
   def initialize
     @balance = STARTING_BALANCE
@@ -27,9 +27,11 @@ attr_reader :balance, :entry_station
     @entry_station = station
   end
   
-  def touch_out
+  def touch_out(station)
     deduct(MINIMUM_FARE)
     @entry_station = nil
+    @exit_station = station
+
   end
 
   private
