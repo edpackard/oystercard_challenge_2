@@ -17,10 +17,7 @@ attr_reader :balance, :in_use
     @balance += money
   end 
 
-  def deduct(money)
-    @balance -= money
-  end
-
+  
   def in_journey?
     @in_use
   end
@@ -31,7 +28,14 @@ attr_reader :balance, :in_use
   end
   
   def touch_out
+    deduct(MINIMUM_FARE)
     @in_use = false
+  end
+
+  private
+
+  def deduct(money)
+    @balance -= money
   end
 
 end
