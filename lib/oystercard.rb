@@ -7,7 +7,7 @@ MAX_TOP_UP = 90
 attr_reader :balance, 
             :entry_station, 
             :exit_station,
-            :journey ##??
+            :journey,
             :journeys
 
   def initialize
@@ -17,7 +17,8 @@ attr_reader :balance,
   end 
 
   def top_up(money)
-    raise "Error: Cannot exceed max balance of #{MAX_TOP_UP}" if ((@balance + money) > MAX_TOP_UP)
+    error_message = "Error: Cannot exceed max balance of #{MAX_TOP_UP}"
+    raise error_message if exceed_top_up?(money, balance)
     
     @balance += money
   end 
@@ -27,22 +28,32 @@ attr_reader :balance,
   end
 
   def touch_in(station)
-    raise "Insufficient funds!" if @balance < MINIMUM_FARE
-    @journey = Hash.new ##??
+    raise "Insufficient funds!" if insufficient_funds?
     @entry_station = station
+    @journey = Hash.new
+    @journey[:entry_station] = station
   end
   
   def touch_out(station)
     deduct(MINIMUM_FARE)
     @entry_station = nil
     @exit_station = station
-
+    @journey[:exit_station] = station
+    @journeys << @journey
   end
 
   private
 
   def deduct(money)
     @balance -= money
+  end
+
+  def exceed_top_up?(amount, balance)
+    (balance += amount) > MAX_TOP_UP
+  end
+
+  def insufficient_funds?
+    @balance < MINIMUM_FARE
   end
 
 end
