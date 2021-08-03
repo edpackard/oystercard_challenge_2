@@ -21,4 +21,13 @@ describe Oystercard do
     end
   end
 
+  describe "in_journey" do
+    it "returns true if in_journey" do
+    expect(subject.in_journey?(true)).to be true
+    end
+    it "returns false if not in_journey" do
+      expect(subject.in_journey?).to be false
+    end
+  end
+
 end
