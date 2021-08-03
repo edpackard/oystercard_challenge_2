@@ -23,10 +23,18 @@ describe Oystercard do
 
   describe "in_journey" do
     it "returns true if in_journey" do
-    expect(subject.in_journey?(true)).to be true
+    subject.touch_in
+    expect(subject.in_journey?).to be true
     end
     it "returns false if not in_journey" do
       expect(subject.in_journey?).to be false
+    end
+  end
+
+  describe "#touch_in" do
+
+    it "changes in_journey? status to true" do
+      expect { subject.touch_in }. to change { subject.in_journey? }.to(true)
     end
   end
 
