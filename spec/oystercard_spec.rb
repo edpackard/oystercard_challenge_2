@@ -10,6 +10,12 @@ describe Oystercard do
   
   it { expect(subject.balance).to eq(Oystercard::STARTING_BALANCE) }
 
+  describe "@journeys instance variable" do
+    it "initialises as an empty array" do
+      expect(subject.journeys).to be_a Array
+    end
+  end
+
   describe '#top_up' do
     it "adds money to card" do
       expect { subject.top_up(5) }.to change { subject.balance }.by(5)
@@ -49,6 +55,15 @@ describe Oystercard do
       subject.touch_in(:station)
       expect(subject.entry_station).to eq :station
     end
+
+    it "creates a hash to store entry and exit details" do
+      subject.top_up(Oystercard::MINIMUM_FARE)
+      subject.touch_in(:station)
+      expect(subject.journey).to be_a Hash
+    end
+
+    # it pushes entry station (with key) to journey hash
+
   end
 
   describe "#touch_out" do
@@ -74,6 +89,11 @@ describe Oystercard do
       subject.touch_out(:station)
       expect(subject.exit_station).to eq :station
     end
+
+    # adds exit station with key to journey hash
+
+  
+    # touch out adds journey to journeys
 
   end
 
