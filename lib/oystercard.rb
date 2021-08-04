@@ -23,7 +23,7 @@ attr_reader :balance,
 
   def in_journey?
     @journey.size == 1
-    #@entry_station != nil ? true : false
+    #alternative: @entry_station != nil ? true : false
   end
 
   def touch_in(station)
