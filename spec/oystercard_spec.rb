@@ -27,16 +27,26 @@ describe Oystercard do
 
   describe "#touch_in" do
 
+  before(:each) do
+    allow(station).to receive(:get_name).and_return("name")
+    allow(station).to receive(:get_zone).and_return("zone")
+  end
+
     context "no funds" do
+     
       it "raises an error if insufficient funds" do
-        expect { subject.touch_in(:station) }.to raise_error "Insufficient funds!"
+        name = station.get_name
+        zone = station.get_zone
+        expect { subject.touch_in(name, zone) }.to raise_error "Insufficient funds!"
       end
     end
     
     context "with funds" do
       before(:each) do
         subject.top_up(Oystercard::MINIMUM_FARE)
-        subject.touch_in(:station)
+        name = station.get_name
+        zone = station.get_zone
+        subject.touch_in(name, zone)
       end
 
       it "sets in_journey? status as true" do
@@ -50,6 +60,10 @@ describe Oystercard do
       it "adds entry station to journey hash" do
         expect(subject.journey).to include(entry_station: :station)
       end
+
+      it "adds entry station zone to journey hash" do
+        expect(subject.journey).to include(entry_zone: :zone)
+      end
     end
   end
 
@@ -57,7 +71,11 @@ describe Oystercard do
 
     before(:each) do
       subject.top_up(Oystercard::MINIMUM_FARE)
-      subject.touch_in(:station)
+      allow(station).to receive(:get_name).and_return("name")
+      allow(station).to receive(:get_zone).and_return("zone")
+      name = station.get_name
+      zone = station.get_zone
+      subject.touch_in(name, zone)
     end
 
     it "deducts minimum fare" do

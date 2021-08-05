@@ -22,14 +22,15 @@ attr_reader :balance,
   end 
 
   def in_journey?
-    @journey.size == 1
+    @journey.size == 2
     #alternative: @entry_station != nil ? true : false
   end
 
-  def touch_in(station)
+  def touch_in(station, zone)
     raise "Insufficient funds!" if insufficient_funds?
     @journey = Hash.new
     record_journey(:entry_station, station)
+    record_journey(:entry_zone, zone)
   end
   
   def touch_out(station)
@@ -44,8 +45,8 @@ attr_reader :balance,
     @balance -= money
   end
 
-  def record_journey(stage, station)
-    @journey[stage] = station
+  def record_journey(key, station)
+    @journey[key] = station
   end
 
   def exceed_top_up?(amount, balance)
