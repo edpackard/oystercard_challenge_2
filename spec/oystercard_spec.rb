@@ -58,11 +58,11 @@ describe Oystercard do
       end
 
       it "adds entry station to journey hash" do
-        expect(subject.journey).to include(entry_station: :station)
+        expect(subject.journey).to include(entry_station: "name")
       end
 
       it "adds entry station zone to journey hash" do
-        expect(subject.journey).to include(entry_zone: :zone)
+        expect(subject.journey).to include(entry_zone: "zone")
       end
     end
   end
@@ -88,13 +88,13 @@ describe Oystercard do
     end
 
     it "adds exit station to journey hash" do
-      subject.touch_out(:station2)
-      expect(subject.journey).to include(entry_station: :station, exit_station: :station2)
+      subject.touch_out(:station)
+      expect(subject.journey).to include(entry_station: "name", exit_station: :station)
     end
 
     it "adds journey data to journeys array" do
-      subject.touch_out(:station2)
-      hash = {entry_station: :station, exit_station: :station2}
+      subject.touch_out(:station)
+      hash = {entry_station: "name", exit_station: :station, entry_zone: "zone"}
       expect(subject.journeys).to contain_exactly(hash)
     end
   
