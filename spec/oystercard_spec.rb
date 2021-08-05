@@ -69,47 +69,49 @@ describe Oystercard do
 
   describe "#touch_out" do
 
-    before(:each) do
-      subject.top_up(Oystercard::MINIMUM_FARE)
-      allow(station).to receive(:get_name).and_return("name")
-      allow(station).to receive(:get_zone).and_return("zone")
-      name = station.get_name
-      zone = station.get_zone
-      # not sure if I will still need these ^^
-      subject.touch_in(name, zone)
-      p "WE ARE HERE "
-      p name 
-      p zone
+    context "check min fare" do
+
+      it "deducts minimum fare" do
+        subject.top_up(Oystercard::MINIMUM_FARE)
+        allow(station).to receive(:get_name).and_return("name")
+        allow(station).to receive(:get_zone).and_return("zone")
+        name = station.get_name
+        zone = station.get_zone
+        subject.touch_in(name, zone)
+        expect { subject.touch_out(name,zone) }.to change { subject.balance }.by (-Oystercard::MINIMUM_FARE)
+      end
+
     end
 
-    it "deducts minimum fare" do
-      expect { subject.touch_out(:station ) }.to change { subject.balance }.by (-Oystercard::MINIMUM_FARE)
-    end
-
-    it "sets in_journey? status as false" do
-      subject.touch_out(:station)
-      expect(subject.in_journey?).to eq false
-    end
-
-    it "adds exit station to journey hash" do
-      subject.touch_out(:station)
-      expect(subject.journey).to include(entry_station: "name", exit_station: :station)
-    end
+    context "check journey" do
     
-    it "adds exit zone to journey hash" do
-      p " WE ARE HERE"
-      name = station.get_name
-      zone = station.get_zone
-      subject.touch_out(name, zone)
-      expect(subject.journey).to include(entry_zone: "zone", exit_zone: "zone")
+      before(:each) do
+        subject.top_up(Oystercard::MINIMUM_FARE)
+        allow(station).to receive(:get_name).and_return("name")
+        allow(station).to receive(:get_zone).and_return("zone")
+        name = station.get_name
+        zone = station.get_zone
+        subject.touch_in(name, zone)
+        subject.touch_out(name,zone)
+      end
+
+      it "sets in_journey? status as false" do
+        expect(subject.in_journey?).to eq false
+      end
+
+      it "adds exit station to journey hash" do
+        expect(subject.journey).to include(exit_station: "name")
+      end
+      
+      it "adds exit zone to journey hash" do
+        expect(subject.journey).to include(exit_zone: "zone")
+      end
+      
+      it "adds journey data to journeys array" do
+        hash = {entry_station: "name", exit_station: "name", entry_zone: "zone", exit_zone: "zone"}
+        expect(subject.journeys).to contain_exactly(hash)
+      end
     end
-    
-    it "adds journey data to journeys array" do
-      subject.touch_out(:station, )
-      hash = {entry_station: "name", exit_station: "name", entry_zone: "zone", exit_zone: "zone"}
-      expect(subject.journeys).to contain_exactly(hash)
-    end
-  
   end
 
 end
