@@ -75,7 +75,11 @@ describe Oystercard do
       allow(station).to receive(:get_zone).and_return("zone")
       name = station.get_name
       zone = station.get_zone
+      # not sure if I will still need these ^^
       subject.touch_in(name, zone)
+      p "WE ARE HERE "
+      p name 
+      p zone
     end
 
     it "deducts minimum fare" do
@@ -91,10 +95,18 @@ describe Oystercard do
       subject.touch_out(:station)
       expect(subject.journey).to include(entry_station: "name", exit_station: :station)
     end
-
+    
+    it "adds exit zone to journey hash" do
+      p " WE ARE HERE"
+      name = station.get_name
+      zone = station.get_zone
+      subject.touch_out(name, zone)
+      expect(subject.journey).to include(entry_zone: "zone", exit_zone: "zone")
+    end
+    
     it "adds journey data to journeys array" do
-      subject.touch_out(:station)
-      hash = {entry_station: "name", exit_station: :station, entry_zone: "zone"}
+      subject.touch_out(:station, )
+      hash = {entry_station: "name", exit_station: "name", entry_zone: "zone", exit_zone: "zone"}
       expect(subject.journeys).to contain_exactly(hash)
     end
   

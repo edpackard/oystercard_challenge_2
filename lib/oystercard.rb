@@ -33,9 +33,10 @@ attr_reader :balance,
     record_journey(:entry_zone, zone)
   end
   
-  def touch_out(station)
+  def touch_out(station, zone)
     deduct(MINIMUM_FARE)
     record_journey(:exit_station, station)
+    record_journey(:exit_zone, zone)
     @journeys << @journey
   end
 
