@@ -27,5 +27,14 @@ subject { described_class.new("name", "zone") }
     subject.finish("name", "zone")
     expect(subject.complete?).to be true
   end
+
+  it 'returns minimum fare if journey complete' do
+    subject.finish("name", "zone")
+    expect(subject.fare).to eq 1
+  end
+
+  it 'returns penalty fare if journey incomplete' do
+    expect(subject.fare).to eq Journey::PENALTY_FARE
+  end
   
 end
