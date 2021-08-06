@@ -8,5 +8,9 @@ class Journey
    @current_journey
  end
 
+ def finish(name, zone)
+  @current_journey[:exit_station] = name
+  @current_journey[:exit_zone] = zone
+ end
 
 end
