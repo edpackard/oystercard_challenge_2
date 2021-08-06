@@ -29,11 +29,10 @@ attr_reader :balance,
    # NEED TO MOVE ^^
 
   def touch_in(station, zone)
-    #if @trip.complete? || @trip.does_not_exist
-      #normal script
-    #else
-      #penalty script
     raise "Insufficient funds!" if insufficient_funds?
+    if !@trip.nil?
+      raise "PENALTY!!" if !@trip.complete?
+    end
     @trip = Journey.new(station, zone)
     
     # @journey = Hash.new

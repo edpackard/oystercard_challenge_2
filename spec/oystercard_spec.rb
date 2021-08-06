@@ -64,6 +64,11 @@ describe Oystercard do
       it "adds entry station zone to journey hash" do
         expect(subject.trip).to include(entry_zone: "zone")
       end
+
+      it 'tests touching in on incomplete journey raises penalty' do
+        expect { subject.touch_in("name", "zone") }.to raise_error "PENALTY!!"
+      end
+
     end
   end
 
