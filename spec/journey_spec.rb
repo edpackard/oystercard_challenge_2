@@ -18,4 +18,14 @@ subject { described_class.new("name", "zone") }
     subject.finish("name", "zone")
     expect([subject.see_current_journey]).to contain_exactly({entry_station: "name", exit_station: "name", entry_zone: "zone", exit_zone: "zone"})
   end
+  
+  it 'tests the complete? on an unfinished journey' do
+    expect(subject.complete?).to eq false
+  end
+  
+  it 'tests the complete? on a completed journey' do
+    subject.finish("name", "zone")
+    expect(subject.complete?).to be true
+  end
+  
 end

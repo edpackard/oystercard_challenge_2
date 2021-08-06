@@ -12,5 +12,9 @@ class Journey
   @current_journey[:exit_station] = name
   @current_journey[:exit_zone] = zone
  end
+ 
+ def complete?
+   @current_journey.size == 4
+ end
 
 end
