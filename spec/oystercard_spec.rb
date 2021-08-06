@@ -47,8 +47,13 @@ describe Oystercard do
         subject.touch_in("name", "zone")
       end
 
-      it 'tests touching in on incomplete journey raises penalty' do
-        expect { subject.touch_in("name", "zone") }.to raise_error "PENALTY!!"
+      it 'tests touching in on incomplete journey incurs penalty fare' do
+        expect { subject.touch_in("Holborn","1") }.to change { subject.balance }.by (-6)
+      end
+
+      it 'test touching in on an incomplete journey sends penalty message to trip log' do
+        subject.touch_in("Holborn", "1")
+        expect(subject.trip_log).to contain_exactly({penalty: "Holborn"})
       end
 
     end

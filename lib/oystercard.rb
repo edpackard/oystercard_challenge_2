@@ -24,17 +24,16 @@ attr_reader :balance,
 
   def touch_in(station, zone)
     raise "Insufficient funds!" if insufficient_funds?
-    
-    if !@trip.nil?
-      raise "PENALTY!!" if !@trip.complete?
-      
+    if !@trip.nil? && !@trip.complete?
+      deduct(@trip.fare)
+      @trip.finish(station, zone, true)
+      @trip_log << @trip.see_current_journey
     end
     @trip = Journey.new(station, zone)
-    
   end
   
   def touch_out(station, zone)
-      raise "PENALTY!!" if @trip.nil? || @trip.complete?
+    raise "PENALTY!!" if @trip.nil? || @trip.complete?
  
     @trip.finish(station, zone)
     deduct(@trip.fare)

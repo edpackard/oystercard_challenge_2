@@ -10,9 +10,13 @@ PENALTY_FARE = 6
    @current_journey
  end
 
- def finish(name, zone)
-  @current_journey[:exit_station] = name
-  @current_journey[:exit_zone] = zone
+ def finish(name, zone, penalty=false)
+  if penalty == true
+    @current_journey = {penalty: name}
+  else
+    @current_journey[:exit_station] = name
+    @current_journey[:exit_zone] = zone
+  end  
  end
 
  def fare
