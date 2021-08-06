@@ -1,21 +1,12 @@
 class Journey
 
  def initialize(name, zone)
-   @journey = {}
-   @name = name
-   @zone = zone
+   @current_journey = {entry_station: name, entry_zone: zone}
  end
 
- def see_journey
-   @journey
+ def see_current_journey
+   @current_journey
  end
 
- def see_name
-   @name
- end
-
- def see_zone
-   @zone
- end
 
 end

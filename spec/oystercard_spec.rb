@@ -10,7 +10,7 @@ describe Oystercard do
       expect(subject.balance).to eq Oystercard::STARTING_BALANCE
     end
     it "initializes @journeys as empty" do
-      expect(subject.journeys).to be_empty
+      expect(subject.trip_log).to be_empty
     end
   end
 
@@ -54,15 +54,15 @@ describe Oystercard do
       end
 
       it "creates hash to store entry and exit stations" do
-        expect(subject.journey).to be_a Hash
+        expect(subject.trip).to be_a Hash
       end
 
       it "adds entry station to journey hash" do
-        expect(subject.journey).to include(entry_station: "name")
+        expect(subject.trip).to include(entry_station: "name")
       end
 
       it "adds entry station zone to journey hash" do
-        expect(subject.journey).to include(entry_zone: "zone")
+        expect(subject.trip).to include(entry_zone: "zone")
       end
     end
   end
@@ -100,16 +100,16 @@ describe Oystercard do
       end
 
       it "adds exit station to journey hash" do
-        expect(subject.journey).to include(exit_station: "name")
+        expect(subject.trip).to include(exit_station: "name")
       end
       
       it "adds exit zone to journey hash" do
-        expect(subject.journey).to include(exit_zone: "zone")
+        expect(subject.trip).to include(exit_zone: "zone")
       end
       
       it "adds journey data to journeys array" do
         hash = {entry_station: "name", exit_station: "name", entry_zone: "zone", exit_zone: "zone"}
-        expect(subject.journeys).to contain_exactly(hash)
+        expect(subject.trip_log).to contain_exactly(hash)
       end
     end
   end
