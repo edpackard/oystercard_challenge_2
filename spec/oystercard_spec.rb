@@ -44,25 +44,7 @@ describe Oystercard do
     context "with funds" do
       before(:each) do
         subject.top_up(Oystercard::MINIMUM_FARE)
-        name = station.get_name
-        zone = station.get_zone
-        subject.touch_in(name, zone)
-      end
-
-      it "sets in_journey? status as true" do
-        expect(subject.in_journey?).to be true
-      end
-
-      it "creates hash to store entry and exit stations" do
-        expect(subject.trip).to be_a Hash
-      end
-
-      it "adds entry station to journey hash" do
-        expect(subject.trip).to include(entry_station: "name")
-      end
-
-      it "adds entry station zone to journey hash" do
-        expect(subject.trip).to include(entry_zone: "zone")
+        subject.touch_in("name", "zone")
       end
 
       it 'tests touching in on incomplete journey raises penalty' do
@@ -78,12 +60,8 @@ describe Oystercard do
 
       it "deducts minimum fare" do
         subject.top_up(Oystercard::MINIMUM_FARE)
-        allow(station).to receive(:get_name).and_return("name")
-        allow(station).to receive(:get_zone).and_return("zone")
-        name = station.get_name
-        zone = station.get_zone
-        subject.touch_in(name, zone)
-        expect { subject.touch_out(name,zone) }.to change { subject.balance }.by (-Oystercard::MINIMUM_FARE)
+        subject.touch_in("Mile End", "2")
+        expect { subject.touch_out("Holborn","1") }.to change { subject.balance }.by (-Oystercard::MINIMUM_FARE)
       end
 
     end
@@ -94,22 +72,8 @@ describe Oystercard do
         subject.top_up(Oystercard::MINIMUM_FARE)
         allow(station).to receive(:get_name).and_return("name")
         allow(station).to receive(:get_zone).and_return("zone")
-        name = station.get_name
-        zone = station.get_zone
-        subject.touch_in(name, zone)
-        subject.touch_out(name,zone)
-      end
-
-      it "sets in_journey? status as false" do
-        expect(subject.in_journey?).to eq false
-      end
-
-      it "adds exit station to journey hash" do
-        expect(subject.trip).to include(exit_station: "name")
-      end
-      
-      it "adds exit zone to journey hash" do
-        expect(subject.trip).to include(exit_zone: "zone")
+        subject.touch_in("name", "zone")
+        subject.touch_out("name","zone")
       end
       
       it "adds journey data to journeys array" do

@@ -22,12 +22,6 @@ attr_reader :balance,
     @balance += money
   end 
 
-  def in_journey?
-    @trip.size == 2
-    #alternative: @entry_station != nil ? true : false
-  end
-   # NEED TO MOVE ^^
-
   def touch_in(station, zone)
     raise "Insufficient funds!" if insufficient_funds?
     
@@ -37,20 +31,13 @@ attr_reader :balance,
     end
     @trip = Journey.new(station, zone)
     
-    # @journey = Hash.new
-    # record_journey(:entry_station, station)
-    # record_journey(:entry_zone, zone)
-    # NEED TO MOVE ^^
   end
   
   def touch_out(station, zone)
       raise "PENALTY!!" if @trip.nil? || @trip.complete?
  
-    #deduct(MINIMUM_FARE)
     @trip.finish(station, zone)
-    #record_journey(:exit_station, station)
-   # record_journey(:exit_zone, zone)
-    # NEED TO MOVE ^^
+    deduct(@trip.fare)
     @trip_log << @trip.see_current_journey
 
 
@@ -61,12 +48,7 @@ attr_reader :balance,
   def deduct(money)
     @balance -= money
   end
-
-  def record_journey(key, value)
-    @trip[key] = value
-  end
-   # NEED TO MOVE ^^
-
+  
   def exceed_top_up?(amount, balance)
     (balance += amount) > MAX_TOP_UP
   end
