@@ -39,11 +39,12 @@ attr_reader :balance,
   end
   
   def touch_out(station, zone)
-    deduct(MINIMUM_FARE)
-    record_journey(:exit_station, station)
-    record_journey(:exit_zone, zone)
+    #deduct(MINIMUM_FARE)
+    @trip.finish(station, zone)
+    #record_journey(:exit_station, station)
+   # record_journey(:exit_zone, zone)
     # NEED TO MOVE ^^
-    @trip_log << @trip
+    @trip_log << @trip.see_current_journey
 
 
   end
