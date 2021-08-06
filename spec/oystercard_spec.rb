@@ -116,6 +116,19 @@ describe Oystercard do
         hash = {entry_station: "name", exit_station: "name", entry_zone: "zone", exit_zone: "zone"}
         expect(subject.trip_log).to contain_exactly(hash)
       end
+      
+      it 'tests touching out when not touching in first raises penalty' do
+        expect { subject.touch_out("name", "zone") }.to raise_error "PENALTY!!"
+      end
+      
+    end
+    
+    context "Touch_out penalty" do
+      
+       it 'tests touching out when not touching in first raises penalty, on a new card' do
+        expect { subject.touch_out("name", "zone") }.to raise_error "PENALTY!!"
+      end
+      
     end
   end
 
